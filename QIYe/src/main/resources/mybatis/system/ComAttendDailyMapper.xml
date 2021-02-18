@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emp.project.system.daily.mapper.ComAttendDailyMapper">
+    
+    <resultMap type="ComAttendDaily" id="ComAttendDailyResult">
+        <result property="id"    column="id"    />
+        <result property="empId"    column="emp_id"    />
+        <result property="isLate"    column="is_late"    />
+        <result property="lateReason"    column="late_reason"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="signTime"    column="sign_time"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectComAttendDailyVo">
+        SELECT
+	da.*,
+	de.dept_name deptName,
+	em.name
+FROM
+	com_attend_daily da
+	LEFT JOIN sys_dept de ON da.dept_id = de.dept_id
+	LEFT JOIN com_employees em ON em.id = da.emp_id
+    </sql>
+
+    <select id="selectComAttendDailyList" parameterType="ComAttendDaily" resultMap="ComAttendDailyResult">
+        <include refid="selectComAttendDailyVo"/>
+        <where>  
+            <if test="empId != null "> and emp_id = #{empId}</if>
+            <if test="isLate != null  and isLate != ''"> and is_late = #{isLate}</if>
+            <if test="lateReason != null  and lateReason != ''"> and late_reason = #{lateReason}</if>
+            <if test="signTime != null "> and sign_time = #{signTime}</if>
+<!--            <if test="deptId != null "> and dept_id = #{deptId}</if>-->
+        </where>
+    </select>
+    
+    <select id="selectComAttendDailyById" parameterType="Long" resultMap="ComAttendDailyResult">
+        <include refid="selectComAttendDailyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertComAttendDaily" parameterType="ComAttendDaily" useGeneratedKeys="true" keyProperty="id">
+        insert into com_attend_daily
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">emp_id,</if>
+            <if test="isLate != null and isLate != ''">is_late,</if>
+            <if test="lateReason != null">late_reason,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="signTime != null">sign_time,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="isLate != null and isLate != ''">#{isLate},</if>
+            <if test="lateReason != null">#{lateReason},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="signTime != null">#{signTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComAttendDaily" parameterType="ComAttendDaily">
+        update com_attend_daily
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
+            <if test="isLate != null and isLate != ''">is_late = #{isLate},</if>
+            <if test="lateReason != null">late_reason = #{lateReason},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="signTime != null">sign_time = #{signTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteComAttendDailyById" parameterType="Long">
+        delete from com_attend_daily where id = #{id}
+    </delete>
+
+    <delete id="deleteComAttendDailyByIds" parameterType="String">
+        delete from com_attend_daily where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emp.project.system.wages.mapper.ComWagesMapper">
+    
+    <resultMap type="ComWages" id="ComWagesResult">
+        <result property="id"    column="id"    />
+        <result property="empId"    column="empId"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="shouldPay"    column="should_pay"    />
+        <result property="realWages"    column="real_wages"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectComWagesVo">
+        SELECT
+	wa.*,
+	emp.name,
+	dep.dept_name deptName
+    FROM
+	com_wages wa
+	LEFT JOIN com_employees emp ON wa.emp_id = emp.id
+	LEFT JOIN sys_dept dep ON wa.dept_id = dep.dept_id
+    </sql>
+
+    <select id="selectComWagesList" parameterType="ComWages" resultMap="ComWagesResult">
+        <include refid="selectComWagesVo"/>
+        <where>  
+
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+        </where>
+    </select>
+    
+    <select id="selectComWagesById" parameterType="Long" resultMap="ComWagesResult">
+        <include refid="selectComWagesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertComWages" parameterType="ComWages" useGeneratedKeys="true" keyProperty="id">
+        insert into com_wages
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">empId,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="shouldPay != null and shouldPay != ''">should_pay,</if>
+            <if test="realWages != null">real_wages,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="shouldPay != null and shouldPay != ''">#{shouldPay},</if>
+            <if test="realWages != null">#{realWages},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComWages" parameterType="ComWages">
+        update com_wages
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">empId = #{empId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="shouldPay != null and shouldPay != ''">should_pay = #{shouldPay},</if>
+            <if test="realWages != null">real_wages = #{realWages},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteComWagesById" parameterType="Long">
+        delete from com_wages where id = #{id}
+    </delete>
+
+    <delete id="deleteComWagesByIds" parameterType="String">
+        delete from com_wages where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

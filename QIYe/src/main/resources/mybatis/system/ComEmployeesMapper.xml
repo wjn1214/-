@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.emp.project.system.employees.mapper.ComEmployeesMapper">
+    
+    <resultMap type="ComEmployees" id="ComEmployeesResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="birth"    column="birth"    />
+        <result property="gender"    column="gender"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="address"    column="address"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectComEmployeesVo">
+        SELECT
+	em.*,
+	de.dept_name
+    FROM
+	com_employees em
+	LEFT JOIN sys_dept de ON em.dep_id = de.dept_id
+    </sql>
+
+    <select id="selectComEmployeesList" parameterType="ComEmployees" resultMap="ComEmployeesResult">
+        <include refid="selectComEmployeesVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="birth != null "> and birth = #{birth}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="entryTime != null "> and entry_time = #{entryTime}</if>
+            <if test="isDel != null  and isDel != ''"> and is_del = #{isDel}</if>
+        </where>
+    </select>
+    
+    <select id="selectComEmployeesById" parameterType="Long" resultMap="ComEmployeesResult">
+        <include refid="selectComEmployeesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertComEmployees" parameterType="ComEmployees" useGeneratedKeys="true" keyProperty="id">
+        insert into com_employees
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="birth != null">birth,</if>
+            <if test="gender != null">gender,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="address != null">address,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="birth != null">#{birth},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="address != null">#{address},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComEmployees" parameterType="ComEmployees">
+        update com_employees
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="birth != null">birth = #{birth},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteComEmployeesById" parameterType="Long">
+        delete from com_employees where id = #{id}
+    </delete>
+
+    <delete id="deleteComEmployeesByIds" parameterType="String">
+        delete from com_employees where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
