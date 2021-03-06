@@ -1,6 +1,9 @@
 package com.emp.project.system.wages.service;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.emp.framework.web.domain.AjaxResult;
 import com.emp.project.system.wages.domain.ComWages;
 
 /**
@@ -9,7 +12,7 @@ import com.emp.project.system.wages.domain.ComWages;
  * @author wjn
  * @date 2020-10-24
  */
-public interface IComWagesService 
+public interface IComWagesService extends IService<ComWages>
 {
     /**
      * 查询员工薪资管理
@@ -58,4 +61,6 @@ public interface IComWagesService
      * @return 结果
      */
     public int deleteComWagesById(Long id);
+
+    AjaxResult addWages();
 }

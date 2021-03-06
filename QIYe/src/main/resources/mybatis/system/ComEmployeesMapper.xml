@@ -16,15 +16,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="entryTime"    column="entry_time"    />
         <result property="isDel"    column="is_del"    />
         <result property="remark"    column="remark"    />
+        <result property="wage"    column="wage"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="postId"    column="post_id"    />
     </resultMap>
 
     <sql id="selectComEmployeesVo">
         SELECT
 	em.*,
-	de.dept_name
+	de.dept_name,
+	po.post_name
     FROM
 	com_employees em
-	LEFT JOIN sys_dept de ON em.dep_id = de.dept_id
+	LEFT JOIN sys_dept de ON em.dept_id = de.dept_id
+	left join sys_post po on em.post_id=po.post_id
     </sql>
 
     <select id="selectComEmployeesList" parameterType="ComEmployees" resultMap="ComEmployeesResult">
@@ -32,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="birth != null "> and birth = #{birth}</if>
+            <if test="deptId != null "> and em.dept_id = #{deptId}</if>
             <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
             <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
@@ -54,10 +60,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mobile != null">mobile,</if>
             <if test="address != null">address,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="entryTime != null">entry_time,</if>
             <if test="isDel != null">is_del,</if>
             <if test="remark != null">remark,</if>
+            <if test="wage != null">wage,</if>
+            <if test="postId != null">post_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
@@ -66,10 +75,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mobile != null">#{mobile},</if>
             <if test="address != null">#{address},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="entryTime != null">#{entryTime},</if>
             <if test="isDel != null">#{isDel},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="wage != null">#{wage},</if>
+            <if test="postId != null">#{postId},</if>
          </trim>
     </insert>
 
@@ -82,10 +94,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mobile != null">mobile = #{mobile},</if>
             <if test="address != null">address = #{address},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="entryTime != null">entry_time = #{entryTime},</if>
             <if test="isDel != null">is_del = #{isDel},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="wage != null">wage = #{wage},</if>
+            <if test="postId != null">post_id = #{postId},</if>
         </trim>
         where id = #{id}
     </update>

@@ -1,6 +1,8 @@
 package com.emp.project.system.daily.controller;
 
 import java.util.List;
+
+import com.emp.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +20,13 @@ import com.emp.framework.web.controller.BaseController;
 import com.emp.framework.web.domain.AjaxResult;
 import com.emp.common.utils.poi.ExcelUtil;
 import com.emp.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 员工考勤管理Controller
+ * 员工考勤信息Controller
  * 
  * @author wjn
- * @date 2020-10-24
+ * @date 2021-03-06
  */
 @Controller
 @RequestMapping("/system/daily")
@@ -42,7 +45,7 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 查询员工考勤管理列表
+     * 查询员工考勤信息列表
      */
     @RequiresPermissions("system:daily:list")
     @PostMapping("/list")
@@ -55,10 +58,10 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 导出员工考勤管理列表
+     * 导出员工考勤信息列表
      */
     @RequiresPermissions("system:daily:export")
-    @Log(title = "员工考勤管理", businessType = BusinessType.EXPORT)
+    @Log(title = "员工考勤信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(ComAttendDaily comAttendDaily)
@@ -69,7 +72,7 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 新增员工考勤管理
+     * 新增员工考勤信息
      */
     @GetMapping("/add")
     public String add()
@@ -78,10 +81,10 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 新增保存员工考勤管理
+     * 新增保存员工考勤信息
      */
     @RequiresPermissions("system:daily:add")
-    @Log(title = "员工考勤管理", businessType = BusinessType.INSERT)
+    @Log(title = "员工考勤信息", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(ComAttendDaily comAttendDaily)
@@ -90,7 +93,7 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 修改员工考勤管理
+     * 修改员工考勤信息
      */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap)
@@ -101,10 +104,10 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 修改保存员工考勤管理
+     * 修改保存员工考勤信息
      */
     @RequiresPermissions("system:daily:edit")
-    @Log(title = "员工考勤管理", businessType = BusinessType.UPDATE)
+    @Log(title = "员工考勤信息", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(ComAttendDaily comAttendDaily)
@@ -113,14 +116,36 @@ public class ComAttendDailyController extends BaseController
     }
 
     /**
-     * 删除员工考勤管理
+     * 删除员工考勤信息
      */
     @RequiresPermissions("system:daily:remove")
-    @Log(title = "员工考勤管理", businessType = BusinessType.DELETE)
+    @Log(title = "员工考勤信息", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
     public AjaxResult remove(String ids)
     {
         return toAjax(comAttendDailyService.deleteComAttendDailyByIds(ids));
+    }
+
+
+
+    @RequiresPermissions("system:daily:import")
+    @PostMapping("/importData")
+    @ResponseBody
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<ComAttendDaily> util = new ExcelUtil<ComAttendDaily>(ComAttendDaily.class);
+        List<ComAttendDaily> userList = util.importExcel(file.getInputStream());
+        String message = comAttendDailyService.importUser(userList, updateSupport);
+        return AjaxResult.success(message);
+    }
+
+    @RequiresPermissions("system:daily:view")
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<ComAttendDaily> util = new ExcelUtil<ComAttendDaily>(ComAttendDaily.class);
+        return util.importTemplateExcel("考勤数据");
     }
 }

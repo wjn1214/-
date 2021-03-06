@@ -123,4 +123,11 @@ public class ComWagesController extends BaseController
     {
         return toAjax(comWagesService.deleteComWagesByIds(ids));
     }
+
+
+    @PostMapping("/add-wages")
+    @ResponseBody
+    public AjaxResult addWages(){
+        return comWagesService.addWages();
+    }
 }

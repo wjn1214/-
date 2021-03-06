@@ -52,5 +52,15 @@ public class ComEmployees extends BaseEntity
     @TableField(exist = false)
     private String deptName;
 
+    @Excel(name = "薪资")
+    private String wage;
+
+    private Long deptId;
+
+    private Long postId;
+
+    @TableField(exist = false)
+    private String postName;
+
 
 }

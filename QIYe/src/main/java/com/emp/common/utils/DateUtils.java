@@ -3,6 +3,7 @@ package com.emp.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -152,4 +153,16 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
     }
+
+     /**
+         * 获取当月的 天数
+       */
+    public static int getCurrentMonthDay() {
+        Calendar a = Calendar.getInstance();
+        a.set(Calendar.DATE, 1);
+        a.roll(Calendar.DATE, -1);
+        int maxDate = a.get(Calendar.DATE);
+        return maxDate;
+    }
+
 }

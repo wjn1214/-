@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="ComWages" id="ComWagesResult">
         <result property="id"    column="id"    />
-        <result property="empId"    column="empId"    />
+        <result property="empId"    column="emp_id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="shouldPay"    column="should_pay"    />
         <result property="realWages"    column="real_wages"    />
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     FROM
 	com_wages wa
 	LEFT JOIN com_employees emp ON wa.emp_id = emp.id
-	LEFT JOIN sys_dept dep ON wa.dept_id = dep.dept_id
+	LEFT JOIN sys_dept dep ON emp.dept_id = dep.dept_id
     </sql>
 
     <select id="selectComWagesList" parameterType="ComWages" resultMap="ComWagesResult">
@@ -36,13 +36,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectComWagesById" parameterType="Long" resultMap="ComWagesResult">
         <include refid="selectComWagesVo"/>
-        where id = #{id}
+        where wa.id = #{id}
     </select>
-        
+    <select id="selectDailyByTime" resultType="java.lang.Integer">
+
+SELECT count(0)
+ FROM com_wages where TO_DAYS(create_time)=TO_DAYS(NOW()) and emp_id=#{empId};
+    </select>
+    <select id="selecWagesById" resultType="com.emp.project.system.wages.domain.ComWages">
+        SELECT *
+ FROM com_wages where TO_DAYS(create_time)=TO_DAYS(NOW()) and emp_id=#{empId};
+    </select>
+
     <insert id="insertComWages" parameterType="ComWages" useGeneratedKeys="true" keyProperty="id">
         insert into com_wages
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="empId != null">empId,</if>
+            <if test="empId != null">emp_id,</if>
             <if test="deptId != null">dept_id,</if>
             <if test="shouldPay != null and shouldPay != ''">should_pay,</if>
             <if test="realWages != null">real_wages,</if>
@@ -64,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateComWages" parameterType="ComWages">
         update com_wages
         <trim prefix="SET" suffixOverrides=",">
-            <if test="empId != null">empId = #{empId},</if>
+            <if test="empId != null">emp_id = #{empId},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
             <if test="shouldPay != null and shouldPay != ''">should_pay = #{shouldPay},</if>
             <if test="realWages != null">real_wages = #{realWages},</if>

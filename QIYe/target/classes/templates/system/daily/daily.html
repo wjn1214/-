@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('员工考勤管理列表')" />
+    <th:block th:include="include :: header('员工考勤信息列表')" />
+    <th:block th:include="include :: layout-latest-css" />
+    <th:block th:include="include :: ztree-css" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -11,12 +13,12 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <label>考勤状态：</label>
-                                <input type="text" name="isLate"/>
+                                <label>员工工号：</label>
+                                <input type="text" name="empId"/>
                             </li>
                             <li>
-                                <label>迟到原因：</label>
-                                <input type="text" name="lateReason"/>
+                                <label>员工姓名：</label>
+                                <input type="text" name="empName"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -28,9 +30,9 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:employees:add">
-                    <i class="fa fa-plus"></i> 添加
-                </a>
+<!--                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:daily:add">-->
+<!--                    <i class="fa fa-plus"></i> 添加-->
+<!--                </a>-->
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:daily:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
@@ -40,19 +42,22 @@
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:daily:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
+                <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:daily:import">
+                    <i class="fa fa-upload"></i> 导入
+                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: footer" />
+     <th:block th:include="include :: layout-latest-js" />
+     <th:block th:include="include :: ztree-js" />
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:daily:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:daily:remove')}]];
-        var isLateDatas = [[${@dict.getType('is_late')}]];
         var prefix = ctx + "system/daily";
-
 
         $(function() {
             var options = {
@@ -61,7 +66,9 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "员工考勤管理",
+                importUrl: prefix + "/importData",
+                importTemplateUrl: prefix + "/importTemplate",
+                modalName: "员工考勤信息",
                 columns: [{
                     checkbox: true
                 },
@@ -71,28 +78,33 @@
                     visible: false
                 },
                     {
-                      field: 'name',
-                      title: '姓名'
+                        field: 'empName',
+                        title: '员工姓名'
                     },
                 {
-                    field: 'isLate',
-                    title: '考勤状态',
-                    formatter: function(value, row, index) {
-                       return $.table.selectDictLabel(isLateDatas, value);
-                    }
+                    field: 'empId',
+                    title: '员工工号'
                 },
                 {
-                    field: 'lateReason',
-                    title: '迟到原因'
+                    field: 'daysLate',
+                    title: '迟到天数'
                 },
                 {
-                    field: 'signTime',
-                    title: '签到时间'
+                    field: 'daysLeave',
+                    title: '早退天数'
                 },
                 {
-                    field: 'deptName',
-                    title: '所属部门'
+                    field: 'daysAbsent',
+                    title: '缺勤天数'
                 },
+                {
+                    field: 'daysOff',
+                    title: '请假天数'
+                },
+                    {
+                        field: 'createTime',
+                        title: '时间'
+                    },
                 {
                     title: '操作',
                     align: 'center',
@@ -106,7 +118,21 @@
             };
             $.table.init(options);
         });
-
     </script>
 </body>
+<!-- 导入区域 -->
+<script id="importTpl" type="text/template">
+    <form enctype="multipart/form-data" class="mt20 mb10">
+        <div class="col-xs-offset-1">
+            <input type="file" id="file" name="file"/>
+            <div class="mt10 pt5">
+                <input type="checkbox" id="updateSupport" name="updateSupport" title="如果考勤记录已经存在，更新这条数据。"> 是否更新已经存在的考勤记录
+                &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
+            </div>
+            <font color="red" class="pull-left mt10">
+                提示：仅允许导入“xls”或“xlsx”格式文件！
+            </font>
+        </div>
+    </form>
+</script>
 </html>

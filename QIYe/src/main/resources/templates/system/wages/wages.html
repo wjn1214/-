@@ -24,15 +24,18 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:wages:add">
-                    <i class="fa fa-plus"></i> 添加
+<!--                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:wages:add">-->
+<!--                    <i class="fa fa-plus"></i> 添加-->
+<!--                </a>-->
+<!--                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:wages:edit">-->
+<!--                    <i class="fa fa-edit"></i> 修改-->
+<!--                </a>-->
+                <a class="btn btn-warning"  onclick="submitHandler()">
+                    <i class="fa fa-search"></i> 生成本月薪资
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:wages:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:wages:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
+<!--                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:wages:remove">-->
+<!--                    <i class="fa fa-remove"></i> 删除-->
+<!--                </a>-->
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:wages:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
@@ -66,8 +69,12 @@
                 },
                 {
                     field: 'name',
-                    title: '姓名'
+                    title: '员工姓名'
                 },
+                    {
+                        field: 'empId',
+                        title: '员工工号'
+                    },
                 {
                     field: 'deptName',
                     title: '所属部门'
@@ -80,10 +87,10 @@
                     field: 'realWages',
                     title: '实发金额'
                 },
-                {
-                    field: 'remark',
-                    title: '备注'
-                },
+                // {
+                //     field: 'remark',
+                //     title: '备注'
+                // },
                 {
                     title: '操作',
                     align: 'center',
@@ -97,6 +104,12 @@
             };
             $.table.init(options);
         });
+
+        function submitHandler() {
+            console.log(11111)
+            $.operate.post(prefix + "/add-wages");
+           // $.operate.save(prefix + "/add-wages",$('#form-config-add').serialize());
+        }
     </script>
 </body>
 </html>

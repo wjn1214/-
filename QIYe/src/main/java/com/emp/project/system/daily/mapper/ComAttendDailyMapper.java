@@ -4,58 +4,61 @@ import java.util.List;
 import com.emp.project.system.daily.domain.ComAttendDaily;
 
 /**
- * 员工考勤管理Mapper接口
+ * 员工考勤信息Mapper接口
  * 
  * @author wjn
- * @date 2020-10-24
+ * @date 2021-03-06
  */
 public interface ComAttendDailyMapper 
 {
     /**
-     * 查询员工考勤管理
+     * 查询员工考勤信息
      * 
-     * @param id 员工考勤管理ID
-     * @return 员工考勤管理
+     * @param id 员工考勤信息ID
+     * @return 员工考勤信息
      */
     public ComAttendDaily selectComAttendDailyById(Long id);
 
     /**
-     * 查询员工考勤管理列表
+     * 查询员工考勤信息列表
      * 
-     * @param comAttendDaily 员工考勤管理
-     * @return 员工考勤管理集合
+     * @param comAttendDaily 员工考勤信息
+     * @return 员工考勤信息集合
      */
     public List<ComAttendDaily> selectComAttendDailyList(ComAttendDaily comAttendDaily);
 
     /**
-     * 新增员工考勤管理
+     * 新增员工考勤信息
      * 
-     * @param comAttendDaily 员工考勤管理
+     * @param comAttendDaily 员工考勤信息
      * @return 结果
      */
     public int insertComAttendDaily(ComAttendDaily comAttendDaily);
 
     /**
-     * 修改员工考勤管理
+     * 修改员工考勤信息
      * 
-     * @param comAttendDaily 员工考勤管理
+     * @param comAttendDaily 员工考勤信息
      * @return 结果
      */
     public int updateComAttendDaily(ComAttendDaily comAttendDaily);
 
     /**
-     * 删除员工考勤管理
+     * 删除员工考勤信息
      * 
-     * @param id 员工考勤管理ID
+     * @param id 员工考勤信息ID
      * @return 结果
      */
     public int deleteComAttendDailyById(Long id);
 
     /**
-     * 批量删除员工考勤管理
+     * 批量删除员工考勤信息
      * 
      * @param ids 需要删除的数据ID
      * @return 结果
      */
     public int deleteComAttendDailyByIds(String[] ids);
+
+    ComAttendDaily selectDailyByTime(Long empId);
+
 }

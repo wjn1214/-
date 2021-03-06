@@ -1,6 +1,8 @@
 package com.emp.project.system.wages.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.emp.project.system.wages.domain.ComWages;
 
 /**
@@ -9,7 +11,7 @@ import com.emp.project.system.wages.domain.ComWages;
  * @author wjn
  * @date 2020-10-24
  */
-public interface ComWagesMapper 
+public interface ComWagesMapper  extends BaseMapper<ComWages>
 {
     /**
      * 查询员工薪资管理
@@ -58,4 +60,8 @@ public interface ComWagesMapper
      * @return 结果
      */
     public int deleteComWagesByIds(String[] ids);
+
+    int selectDailyByTime(Long empId);
+
+    ComWages selecWagesById(Long empId);
 }

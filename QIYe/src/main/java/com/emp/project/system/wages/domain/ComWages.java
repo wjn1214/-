@@ -31,6 +31,10 @@ public class ComWages extends BaseEntity
     @Excel(name = "应发金额")
     private String shouldPay;
 
+    /** 应发金额 */
+    @Excel(name = "应发金额")
+    private String realWages;
+
     /**
      * 部门名称
      */

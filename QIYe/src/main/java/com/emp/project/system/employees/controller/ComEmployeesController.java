@@ -1,6 +1,8 @@
 package com.emp.project.system.employees.controller;
 
 import java.util.List;
+
+import com.emp.project.system.post.service.IPostService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ public class ComEmployeesController extends BaseController
 
     @Autowired
     private IComEmployeesService comEmployeesService;
+    @Autowired
+    private IPostService postService;
+
 
     @RequiresPermissions("system:employees:view")
     @GetMapping()
@@ -72,8 +77,9 @@ public class ComEmployeesController extends BaseController
      * 新增员工信息管理
      */
     @GetMapping("/add")
-    public String add()
+    public String add(ModelMap mmap)
     {
+        mmap.put("posts", postService.selectPostAll());
         return prefix + "/add";
     }
 
@@ -86,6 +92,7 @@ public class ComEmployeesController extends BaseController
     @ResponseBody
     public AjaxResult addSave(ComEmployees comEmployees)
     {
+
         return toAjax(comEmployeesService.insertComEmployees(comEmployees));
     }
 
@@ -97,6 +104,7 @@ public class ComEmployeesController extends BaseController
     {
         ComEmployees comEmployees = comEmployeesService.selectComEmployeesById(id);
         mmap.put("comEmployees", comEmployees);
+        mmap.put("posts", postService.selectPostAll());
         return prefix + "/edit";
     }
 

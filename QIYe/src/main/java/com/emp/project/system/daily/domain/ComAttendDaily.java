@@ -1,17 +1,14 @@
 package com.emp.project.system.daily.domain;
 
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.emp.framework.aspectj.lang.annotation.Excel;
 import com.emp.framework.web.domain.BaseEntity;
 import lombok.Data;
 
 /**
- * 员工考勤管理对象 com_attend_daily
+ * 员工考勤信息对象 com_attend_daily
  * 
  * @author wjn
- * @date 2020-10-24
+ * @date 2021-03-06
  */
 @Data
 public class ComAttendDaily extends BaseEntity
@@ -21,35 +18,29 @@ public class ComAttendDaily extends BaseEntity
     /** id */
     private Long id;
 
-    /** 员工id */
-    @Excel(name = "员工id")
+    /** 员工工号 */
+    @Excel(name = "员工工号")
     private Long empId;
 
-    /** 是否迟到 1正常 2迟到 */
-    @Excel(name = "是否迟到 1正常 2迟到")
-    private String isLate;
+    /** 员工姓名 */
+    @Excel(name = "员工姓名")
+    private String empName;
 
-    /** 迟到原因 */
-    @Excel(name = "迟到原因")
-    private String lateReason;
+    /** 迟到天数 */
+    @Excel(name = "迟到天数")
+    private Integer daysLate;
 
-    /** 签到时间 */
-    @Excel(name = "签到时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date signTime;
+    /** 早退天数 */
+    @Excel(name = "早退天数")
+    private Integer daysLeave;
 
-    /** 部门id */
-    @Excel(name = "部门id")
-    private Long deptId;
+    /** 缺勤天数 */
+    @Excel(name = "缺勤天数")
+    private Integer daysAbsent;
 
-    /**
-     * 部门名称
-     */
-    @TableField(exist = false)
-    private String deptName;
+    /** 请假天数 */
+    @Excel(name = "请假天数")
+    private Integer daysOff;
 
-    /**
-     * 员工姓名
-     */
-    @TableField(exist = false)
-    private String name;
+
 }

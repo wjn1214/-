@@ -7,33 +7,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ComAttendDaily" id="ComAttendDailyResult">
         <result property="id"    column="id"    />
         <result property="empId"    column="emp_id"    />
-        <result property="isLate"    column="is_late"    />
-        <result property="lateReason"    column="late_reason"    />
+        <result property="daysLate"    column="days_late"    />
+        <result property="daysLeave"    column="days_leave"    />
+        <result property="daysAbsent"    column="days_absent"    />
+        <result property="daysOff"    column="days_off"    />
         <result property="createTime"    column="create_time"    />
-        <result property="remark"    column="remark"    />
-        <result property="signTime"    column="sign_time"    />
-        <result property="deptId"    column="dept_id"    />
+        <result property="empName"    column="emp_name"    />
     </resultMap>
 
     <sql id="selectComAttendDailyVo">
-        SELECT
-	da.*,
-	de.dept_name deptName,
-	em.name
-FROM
-	com_attend_daily da
-	LEFT JOIN sys_dept de ON da.dept_id = de.dept_id
-	LEFT JOIN com_employees em ON em.id = da.emp_id
+        select id, emp_id, days_late, days_leave, days_absent, days_off, create_time, emp_name from com_attend_daily
     </sql>
 
     <select id="selectComAttendDailyList" parameterType="ComAttendDaily" resultMap="ComAttendDailyResult">
         <include refid="selectComAttendDailyVo"/>
         <where>  
             <if test="empId != null "> and emp_id = #{empId}</if>
-            <if test="isLate != null  and isLate != ''"> and is_late = #{isLate}</if>
-            <if test="lateReason != null  and lateReason != ''"> and late_reason = #{lateReason}</if>
-            <if test="signTime != null "> and sign_time = #{signTime}</if>
-<!--            <if test="deptId != null "> and dept_id = #{deptId}</if>-->
+            <if test="daysLate != null "> and days_late = #{daysLate}</if>
+            <if test="daysLeave != null "> and days_leave = #{daysLeave}</if>
+            <if test="daysAbsent != null "> and days_absent = #{daysAbsent}</if>
+            <if test="daysOff != null "> and days_off = #{daysOff}</if>
+            <if test="empName != null  and empName != ''"> and emp_name like concat('%', #{empName}, '%')</if>
         </where>
     </select>
     
@@ -41,26 +35,29 @@ FROM
         <include refid="selectComAttendDailyVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectDailyByTime" resultType="com.emp.project.system.daily.domain.ComAttendDaily">
+        select * from com_attend_daily where TO_DAYS(create_time)=TO_DAYS(NOW()) and emp_id=#{empId}
+    </select>
+
     <insert id="insertComAttendDaily" parameterType="ComAttendDaily" useGeneratedKeys="true" keyProperty="id">
         insert into com_attend_daily
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="empId != null">emp_id,</if>
-            <if test="isLate != null and isLate != ''">is_late,</if>
-            <if test="lateReason != null">late_reason,</if>
+            <if test="daysLate != null">days_late,</if>
+            <if test="daysLeave != null">days_leave,</if>
+            <if test="daysAbsent != null">days_absent,</if>
+            <if test="daysOff != null">days_off,</if>
             <if test="createTime != null">create_time,</if>
-            <if test="remark != null">remark,</if>
-            <if test="signTime != null">sign_time,</if>
-            <if test="deptId != null">dept_id,</if>
+            <if test="empName != null and empName != ''">emp_name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="empId != null">#{empId},</if>
-            <if test="isLate != null and isLate != ''">#{isLate},</if>
-            <if test="lateReason != null">#{lateReason},</if>
+            <if test="daysLate != null">#{daysLate},</if>
+            <if test="daysLeave != null">#{daysLeave},</if>
+            <if test="daysAbsent != null">#{daysAbsent},</if>
+            <if test="daysOff != null">#{daysOff},</if>
             <if test="createTime != null">#{createTime},</if>
-            <if test="remark != null">#{remark},</if>
-            <if test="signTime != null">#{signTime},</if>
-            <if test="deptId != null">#{deptId},</if>
+            <if test="empName != null and empName != ''">#{empName},</if>
          </trim>
     </insert>
 
@@ -68,14 +65,14 @@ FROM
         update com_attend_daily
         <trim prefix="SET" suffixOverrides=",">
             <if test="empId != null">emp_id = #{empId},</if>
-            <if test="isLate != null and isLate != ''">is_late = #{isLate},</if>
-            <if test="lateReason != null">late_reason = #{lateReason},</if>
+            <if test="daysLate != null">days_late = #{daysLate},</if>
+            <if test="daysLeave != null">days_leave = #{daysLeave},</if>
+            <if test="daysAbsent != null">days_absent = #{daysAbsent},</if>
+            <if test="daysOff != null">days_off = #{daysOff},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="remark != null">remark = #{remark},</if>
-            <if test="signTime != null">sign_time = #{signTime},</if>
-            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="empName != null and empName != ''">emp_name = #{empName},</if>
         </trim>
-        where id = #{id}
+        where id = #{id} and  TO_DAYS(create_time)=TO_DAYS(NOW())
     </update>
 
     <delete id="deleteComAttendDailyById" parameterType="Long">
